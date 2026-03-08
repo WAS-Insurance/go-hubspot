@@ -4,7 +4,7 @@ First off, thank you for considering contributing to go-hubspot.
 
 ## Reporting bug & Feature request
 
-If you've noticed a bug or have a feature request, please make an [issue](https://github.com/belong-inc/go-hubspot/issues).  
+If you've noticed a bug or have a feature request, please make an [issue](https://github.com/WAS-Insurance/go-hubspot/issues).  
 Some issue contents are being or have been fixed, so it is recommended to check for similar issues.  
 
 ## Code change flow

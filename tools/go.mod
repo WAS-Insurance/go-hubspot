@@ -1,4 +1,4 @@
-module github.com/belong-inc/go-hubspot/tools
+module github.com/WAS-Insurance/go-hubspot/tools
 
 go 1.20
 

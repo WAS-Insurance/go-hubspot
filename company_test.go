@@ -7,7 +7,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/belong-inc/go-hubspot"
+	"github.com/WAS-Insurance/go-hubspot"
 	"github.com/google/go-cmp/cmp"
 )
 
