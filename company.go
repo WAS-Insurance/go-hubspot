@@ -14,6 +14,7 @@ type CompanyService interface {
 	Update(companyID string, company interface{}) (*ResponseResource, error)
 	Delete(companyID string) error
 	AssociateAnotherObj(companyID string, conf *AssociationConfig) (*ResponseResource, error)
+	DeleteAssociation(companyID string, conf *AssociationConfig) error
 	SearchByDomain(domain string) (*CompanySearchResponse, error)
 	SearchByName(name string) (*CompanySearchResponse, error)
 	Search(req *CompanySearchRequest) (*CompanySearchResponse, error)
@@ -77,6 +78,12 @@ func (s *CompanyServiceOp) AssociateAnotherObj(companyID string, conf *Associati
 		return nil, err
 	}
 	return resource, nil
+}
+
+// DeleteAssociation removes an association between Company and another HubSpot object.
+// It is the inverse of AssociateAnotherObj.
+func (s *CompanyServiceOp) DeleteAssociation(companyID string, conf *AssociationConfig) error {
+	return s.client.Delete(s.companyPath+"/"+companyID+"/"+conf.makeAssociationPath(), nil)
 }
 
 type CompanySearchRequest struct {

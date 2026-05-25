@@ -13,6 +13,7 @@ type DealService interface {
 	Create(deal interface{}) (*ResponseResource, error)
 	Update(dealID string, deal interface{}) (*ResponseResource, error)
 	AssociateAnotherObj(dealID string, conf *AssociationConfig) (*ResponseResource, error)
+	DeleteAssociation(dealID string, conf *AssociationConfig) error
 	SearchByName(dealName string) (*DealSearchResponse, error)
 	Search(req *DealSearchRequest) (*DealSearchResponse, error)
 }
@@ -157,6 +158,12 @@ func (s *DealServiceOp) AssociateAnotherObj(dealID string, conf *AssociationConf
 		return nil, err
 	}
 	return resource, nil
+}
+
+// DeleteAssociation removes an association between Deal and another HubSpot object.
+// It is the inverse of AssociateAnotherObj.
+func (s *DealServiceOp) DeleteAssociation(dealID string, conf *AssociationConfig) error {
+	return s.client.Delete(s.dealPath+"/"+dealID+"/"+conf.makeAssociationPath(), nil)
 }
 
 // SearchByName searches for deals by deal name.
