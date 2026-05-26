@@ -521,7 +521,7 @@ func TestDealServiceOp_DeleteAssociation(t *testing.T) {
 			wantErr: nil,
 		},
 		{
-			name: "Received unable association type error",
+			name: "Received invalid association type error",
 			fields: fields{
 				dealPath: hubspot.ExportDealBasePath,
 				client: hubspot.NewMockClient(&hubspot.MockConfig{

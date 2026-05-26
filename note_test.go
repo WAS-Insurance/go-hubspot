@@ -43,7 +43,7 @@ func TestNoteServiceOp_DeleteAssociation(t *testing.T) {
 			wantErr: nil,
 		},
 		{
-			name: "Received unable association type error",
+			name: "Received invalid association type error",
 			fields: fields{
 				notePath: hubspot.ExportNoteBasePath,
 				client: hubspot.NewMockClient(&hubspot.MockConfig{
