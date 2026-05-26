@@ -14,6 +14,7 @@ type NoteService interface {
 	Update(noteID string, note interface{}) (*ResponseResource, error)
 	Delete(noteID string) error
 	AssociateAnotherObj(noteID string, conf *AssociationConfig) (*ResponseResource, error)
+	DeleteAssociation(noteID string, conf *AssociationConfig) error
 }
 
 // NoteServiceOp handles communication with the note related methods of the HubSpot API.
@@ -132,4 +133,10 @@ func (s *NoteServiceOp) AssociateAnotherObj(noteID string, conf *AssociationConf
 		return nil, err
 	}
 	return resource, nil
+}
+
+// DeleteAssociation removes an association between Note and another HubSpot object.
+// It is the inverse of AssociateAnotherObj.
+func (s *NoteServiceOp) DeleteAssociation(noteID string, conf *AssociationConfig) error {
+	return s.client.Delete(s.notePath+"/"+noteID+"/"+conf.makeAssociationPath(), nil)
 }

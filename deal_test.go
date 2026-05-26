@@ -485,3 +485,80 @@ func TestDealServiceOp_AssociateAnotherObj(t *testing.T) {
 		})
 	}
 }
+
+func TestDealServiceOp_DeleteAssociation(t *testing.T) {
+	type fields struct {
+		dealPath string
+		client   *hubspot.Client
+	}
+	type args struct {
+		dealID string
+		conf   *hubspot.AssociationConfig
+	}
+	tests := []struct {
+		name    string
+		fields  fields
+		args    args
+		wantErr error
+	}{
+		{
+			name: "Successfully deleted association",
+			fields: fields{
+				dealPath: hubspot.ExportDealBasePath,
+				client: hubspot.NewMockClient(&hubspot.MockConfig{
+					Status: http.StatusNoContent,
+					Header: http.Header{},
+				}),
+			},
+			args: args{
+				dealID: "512",
+				conf: &hubspot.AssociationConfig{
+					ToObject:   hubspot.ObjectTypeContact,
+					ToObjectID: "20074",
+					Type:       hubspot.AssociationTypeDealToContact,
+				},
+			},
+			wantErr: nil,
+		},
+		{
+			name: "Received invalid association type error",
+			fields: fields{
+				dealPath: hubspot.ExportDealBasePath,
+				client: hubspot.NewMockClient(&hubspot.MockConfig{
+					Status: http.StatusBadRequest,
+					Header: http.Header{},
+					Body:   []byte(`{"status":"error","message":"test is not a valid association type between deals and contacts","correlationId":"correlation_id","context":{"type":["test"],"fromObjectType":["deals"],"toObjectType":["contacts"]},"category":"VALIDATION_ERROR","subCategory":"crm.associations.INVALID_ASSOCIATION_TYPE"}`),
+				}),
+			},
+			args: args{
+				dealID: "512",
+				conf: &hubspot.AssociationConfig{
+					ToObject:   hubspot.ObjectTypeContact,
+					ToObjectID: "20074",
+					Type:       "test",
+				},
+			},
+			wantErr: &hubspot.APIError{
+				HTTPStatusCode: http.StatusBadRequest,
+				Status:         "error",
+				Message:        "test is not a valid association type between deals and contacts",
+				CorrelationID:  "correlation_id",
+				Context: hubspot.ErrContext{
+					Type:           []string{"test"},
+					FromObjectType: []string{string(hubspot.ObjectTypeDeal)},
+					ToObjectType:   []string{string(hubspot.ObjectTypeContact)},
+				},
+				Category:    "VALIDATION_ERROR",
+				SubCategory: "crm.associations.INVALID_ASSOCIATION_TYPE",
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			err := tt.fields.client.CRM.Deal.DeleteAssociation(tt.args.dealID, tt.args.conf)
+			if !reflect.DeepEqual(tt.wantErr, err) {
+				t.Errorf("DeleteAssociation() error mismatch: want %s got %s", tt.wantErr, err)
+			}
+		})
+	}
+}

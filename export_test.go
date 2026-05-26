@@ -11,6 +11,7 @@ var (
 	ExportContactBasePath = contactBasePath
 	ExportDealBasePath    = dealBasePath
 	ExportCompanyBasePath = companyBasePath
+	ExportNoteBasePath    = noteBasePath
 )
 
 var (
