@@ -14,6 +14,7 @@ type ContactService interface {
 	Update(contactID string, contact interface{}) (*ResponseResource, error)
 	Delete(contactID string) error
 	AssociateAnotherObj(contactID string, conf *AssociationConfig) (*ResponseResource, error)
+	DeleteAssociation(contactID string, conf *AssociationConfig) error
 	SearchByEmail(email string) (*ContactSearchResponse, error)
 	Search(req *ContactSearchRequest) (*ContactSearchResponse, error)
 }
@@ -386,6 +387,12 @@ func (s *ContactServiceOp) AssociateAnotherObj(contactID string, conf *Associati
 		return nil, err
 	}
 	return resource, nil
+}
+
+// DeleteAssociation removes an association between Contact and another HubSpot object.
+// It is the inverse of AssociateAnotherObj.
+func (s *ContactServiceOp) DeleteAssociation(contactID string, conf *AssociationConfig) error {
+	return s.client.Delete(s.contactPath+"/"+contactID+"/"+conf.makeAssociationPath(), nil)
 }
 
 // SearchByEmail searches for a contact by email.
